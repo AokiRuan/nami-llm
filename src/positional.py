@@ -31,8 +31,9 @@ def encode(sentence_tokens):
     return emb + pos_enc
 
 
-cat_eat_fish = encode(["猫", "吃", "鱼"])
-fish_eat_cat = encode(["鱼", "吃", "猫"])
+if __name__ == "__main__":
+    cat_eat_fish = encode(["猫", "吃", "鱼"])
+    fish_eat_cat = encode(["鱼", "吃", "猫"])
 
-print("猫吃鱼:\n", cat_eat_fish)
-print("鱼吃猫:\n", fish_eat_cat)
+    print("猫吃鱼:\n", cat_eat_fish)
+    print("鱼吃猫:\n", fish_eat_cat)

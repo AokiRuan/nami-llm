@@ -1,0 +1,9 @@
+# Python 字节码缓存
+__pycache__/
+*.py[cod]
+
+# uv 虚拟环境
+.venv/
+
+# Jupyter 自动保存
+.ipynb_checkpoints/
