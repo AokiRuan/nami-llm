@@ -4,13 +4,14 @@ import math
 
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, d_model, num_heads):
+    def __init__(self, d_model, num_heads, causal=False):
         super().__init__()
         assert d_model % num_heads == 0
 
         self.d_model = d_model
         self.num_heads = num_heads
         self.d_k = d_model // num_heads
+        self.causal = causal  # True: 每个词只能看到自己和前面的词（GPT 需要）
 
         self.W_q = nn.Linear(d_model, d_model)
         self.W_k = nn.Linear(d_model, d_model)
@@ -30,6 +31,14 @@ class MultiHeadAttention(nn.Module):
         V = V.view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
 
         scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.d_k)
+
+        if self.causal:
+            # 因果掩码：上三角（未来位置）设为 -inf，softmax 之后权重就是 0
+            mask = torch.triu(
+                torch.ones(seq_len, seq_len, dtype=torch.bool, device=x.device), diagonal=1
+            )
+            scores = scores.masked_fill(mask, float("-inf"))
+
         attn_weights = torch.softmax(scores, dim=-1)
         attn_output = torch.matmul(attn_weights, V)
 

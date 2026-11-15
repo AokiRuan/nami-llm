@@ -7,7 +7,7 @@ class FeedForward(nn.Module):
     def __init__(self, d_model, d_ff):
         super().__init__()
         self.W1 = nn.Linear(d_model, d_ff)
-        self.act = nn.GELU()
+        self.act = nn.GELU(approximate="tanh")  # GPT-2 用 tanh 近似版 GELU（gelu_new）
         self.W2 = nn.Linear(d_ff, d_model)
 
     def forward(self, x):
